@@ -5,7 +5,6 @@ var assert = require('assert');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var vfs = require('vinyl-fs');
-var exec = require('child_process').exec;
 var compare = require('./lib/compare');
 
 describe('Inky', () => {
@@ -94,7 +93,7 @@ describe('Inky', () => {
   });
 
   it(`can handle multiple raw tags`, () => {
-    var input = '<h1><raw><%= test %></raw></h1><h2>< raw >!!!</ raw ></h2>';
+    var input = '<h1><raw><%= test %></raw></h1><h2><raw>!!!</raw></h2>';
     var expected = '<h1><%= test %></h1><h2>!!!</h2>';
 
     compare(input, expected);

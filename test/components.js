@@ -8,7 +8,7 @@ describe('Center', () => {
       </center>
     `;
     var expected = `
-      <center data-parsed="">
+      <center>
         <div align="center" class="float-center"></div>
       </center>
     `;
@@ -25,8 +25,8 @@ describe('Center', () => {
     `;
 
     var expected = `
-      <center data-parsed="">
-        <center align="center" class="float-center" data-parsed="">
+      <center>
+        <center align="center" class="float-center">
         </center>
       </center>
     `;
@@ -44,15 +44,13 @@ describe('Center', () => {
     `;
 
     var expected = `
-      <center data-parsed="">
+      <center>
         <table align="center" class="menu float-center">
           <tr>
             <td>
               <table>
                 <tr>
-                  <th class="menu-item float-center">
-                    <a href="#"></a>
-                  </th>
+                  <th class="menu-item float-center"><a href="#"></a></th>
                 </tr>
               </table>
             </td>
@@ -136,7 +134,7 @@ describe('Button', () => {
             <table>
               <tr>
                 <td>
-                  <center data-parsed=""><a href="http://zurb.com" align="center" class="float-center">Button</a></center>
+                  <center><a href="http://zurb.com" class="float-center">Button</a></center>
                 </td>
               </tr>
             </table>
@@ -279,7 +277,7 @@ describe('Spacer', () => {
       <table class="spacer">
         <tbody>
           <tr>
-            <td height="10px" style="font-size:10px;line-height:10px;">&nbsp;</td>
+            <td height="10" style="font-size:10px;line-height:10px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
@@ -295,7 +293,7 @@ describe('Spacer', () => {
       <table class="spacer">
         <tbody>
           <tr>
-            <td height="16px" style="font-size:16px;line-height:16px;">&nbsp;</td>
+            <td height="16" style="font-size:16px;line-height:16px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
@@ -310,7 +308,7 @@ describe('Spacer', () => {
       <table class="spacer hide-for-large">
         <tbody>
           <tr>
-            <td height="10px" style="font-size:10px;line-height:10px;">&nbsp;</td>
+            <td height="10" style="font-size:10px;line-height:10px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
@@ -325,7 +323,7 @@ describe('Spacer', () => {
       <table class="spacer show-for-large">
         <tbody>
           <tr>
-            <td height="20px" style="font-size:20px;line-height:20px;">&nbsp;</td>
+            <td height="20" style="font-size:20px;line-height:20px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
@@ -340,14 +338,14 @@ describe('Spacer', () => {
       <table class="spacer hide-for-large">
         <tbody>
           <tr>
-            <td height="10px" style="font-size:10px;line-height:10px;">&nbsp;</td>
+            <td height="10" style="font-size:10px;line-height:10px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
       <table class="spacer show-for-large">
         <tbody>
           <tr>
-            <td height="20px" style="font-size:20px;line-height:20px;">&nbsp;</td>
+            <td height="20" style="font-size:20px;line-height:20px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
@@ -362,7 +360,7 @@ describe('Spacer', () => {
       <table class="spacer bgcolor">
         <tbody>
           <tr>
-            <td height="10px" style="font-size:10px;line-height:10px;">&nbsp;</td>
+            <td height="10" style="font-size:10px;line-height:10px;">&nbsp;</td>
           </tr>
         </tbody>
       </table>
