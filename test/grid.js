@@ -26,7 +26,7 @@ describe('Container', () => {
         </body>
       </html>
     `
-    compare(input, expected);
+    compare(input, expected, {xml: false});
   });
 
   it('creates a container table', () => {

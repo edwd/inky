@@ -12,7 +12,7 @@ describe('Inky', () => {
     var config = {
       components: { column: 'col' },
       columnCount: 16
-    }
+    };
 
     var inky = new Inky(config);
 
@@ -71,12 +71,12 @@ describe('Inky', () => {
   });
 
   it(`doesn't decode entities if non default cheerio config is given`, () => {
-    var input = '<container>"should not replace quotes"</container>';
+    var input = '<container>"should not replace quotes or non-breaking&nbsp;space"</container>';
     var expected = `
       <table align="center" class="container">
         <tbody>
           <tr>
-            <td>"should not replace quotes"</td>
+            <td>"should not replace quotes or non-breaking&nbsp;space"</td>
           </tr>
         </tbody>
       </table>
@@ -98,6 +98,138 @@ describe('Inky', () => {
 
     compare(input, expected);
   });
+
+  it(`can handle an XHTML 1.0 Transitional document`, () => {
+    var input = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Conforming XHTML 1.0 Transitional Template</title>
+</head>
+<body>
+</body>
+</html>`;
+    var expected = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Conforming XHTML 1.0 Transitional Template</title>
+</head>
+<body>
+</body>
+</html>`;
+
+    compare(input, expected);
+  });
+
+  it(`can handle a more complex XHTML 1.0 Transitional document`, () => {
+    var input = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Conforming XHTML 1.0 Transitional Template</title>
+<link rel="stylesheet" href="https://example.com/example.css"/>
+<meta name="generator" content="Inky"/>
+</head>
+<body>
+<h1>Foo</h1>
+<p id="section-1">
+Hello <a href="https://example.com">World</a>.<br />
+<img src="https://example.com/foo.jpg" alt="Foo"/>
+</p>
+<hr/>
+<p id="section-2">
+Goodbye.
+</p>
+</body>
+</html>`;
+    var expected = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Conforming XHTML 1.0 Transitional Template</title>
+<link rel="stylesheet" href="https://example.com/example.css"/>
+<meta name="generator" content="Inky"/>
+</head>
+<body>
+<h1>Foo</h1>
+<p id="section-1">
+Hello <a href="https://example.com">World</a>.<br />
+<img src="https://example.com/foo.jpg" alt="Foo"/>
+</p>
+<hr/>
+<p id="section-2">
+Goodbye.
+</p>
+</body>
+</html>`;
+
+    compare(input, expected);
+  });
+
+  it(`can handle a more complex HTML 5 document`, () => {
+    var input = `<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://example.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://example.com/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://example.com/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>`;
+    var expected = `<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://example.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://example.com/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://example.com/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>`;
+
+    compare(input, expected, {xml: false});
+  });
+
+  it(`can handle a self-closing tag`, () => {
+    var input = '<h1>Hello<br/>World!</h1>';
+    var expected = '<h1>Hello<br/>World!</h1>';
+
+    compare(input, expected);
+  });
+
+  it(`can self-close a void tag that is not closed`, () => {
+    var input = '<h1>Hello<br>World!</h1>';
+    var expected = '<h1>Hello<br />World!</h1>';
+
+    compare(input, expected);
+  });
+
 
 });
 
