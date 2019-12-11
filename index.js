@@ -10,44 +10,44 @@ const fs = require('fs');
 
 var inky;
 
-module.exports = function (opts, cb) {
-  opts = opts || {};
-  opts.cheerio = Inky.mergeCheerioOpts(opts.cheerio);
+module.exports = function (options, cb) {
+  options = options || {};
+  options.cheerio = Inky.mergeCheerioOpts(options.cheerio);
 
   if (typeof inky === 'undefined') {
-    inky = new Inky(opts);
+    inky = new Inky(options);
   }
 
-  let stream;
-
   // If the user passed in source files, create a stream
-  if (opts.src) {
-    stream = vfs.src(opts.src).pipe(transform());
+  if (options.src) {
+    let stream = vfs.src(options.src).pipe(transform());
 
-    if (opts.dest && typeof cb === 'function') {
+    if (options.dest && typeof cb === 'function') {
       stream.on('finish', cb);
     }
   }
   // Otherwise, return the transform function
   else {
-    return transform();
+    return transform(options);
   }
 
   /**
    * This transform function takes in a Vinyl HTML file, converts the code from Inky to HTML, and returns the modified file via callback.
    * If a `dest` option was provided, the file will be written to disk.
    */
-  function transform () {
+  function transform (options) {
+    options = options || {};
+    options.cheerio = Inky.mergeCheerioOpts(options.cheerio);
+
     return through.obj(function (file, enc, callback) {
-      const convertedHtml = inky.releaseTheKraken(file.contents.toString(),
-        opts.cheerio);
+      const convertedHtml = inky.releaseTheKraken(file.contents.toString(), options.cheerio);
 
       file.contents = Buffer.from(convertedHtml);
 
-      if (typeof opts.dest === 'string') {
+      if (typeof options.dest === 'string') {
         // Write to disk manually if the user specified it by providing a file path in the `dest` key of the options
-        const outputPath = path.join(opts.dest, path.basename(file.path));
-        fs.mkdir(opts.dest, { recursive: true }, function (err) {
+        const outputPath = path.join(options.dest, path.basename(file.path));
+        fs.mkdir(options.dest, { recursive: true }, function (err) {
           if (!err) {
             fs.writeFile(outputPath, convertedHtml, callback);
           } else {

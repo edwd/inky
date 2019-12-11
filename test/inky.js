@@ -99,7 +99,7 @@ describe('Inky', () => {
     compare(input, expected);
   });
 
-  it(`can handle an XHTML 1.0 Transitional document`, () => {
+  it(`can handle an XHTML 1.0 Transitional document when in xmlMode`, () => {
     var input = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -122,7 +122,7 @@ describe('Inky', () => {
     compare(input, expected);
   });
 
-  it(`can handle a more complex XHTML 1.0 Transitional document`, () => {
+  it(`can handle a more complex XHTML 1.0 Transitional document when in xmlMode`, () => {
     var input = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -164,10 +164,40 @@ Goodbye.
 </body>
 </html>`;
 
-    compare(input, expected);
+    compare(input, expected, {xmlMode: true});
   });
 
-  it(`can handle a more complex HTML 5 document`, () => {
+  it(`can handle the shortest valid HTML 5 document when not in xmlMode`, () => {
+    var input = `<!doctype html><title>.</title>`;
+    var expected = `<!doctype html><title>.</title>`;
+
+    compare(input, expected, {xmlMode: false});
+  });
+
+  it(`can handle an HTML 5 document when not in xmlMode`, () => {
+    var input = `<!doctype html>
+<html>
+<head>
+<title>HTML5 Document</title>
+</head>
+<body>
+<p></p>
+</body>
+</html>`;
+    var expected = `<!doctype html>
+<html>
+<head>
+<title>HTML5 Document</title>
+</head>
+<body>
+<p></p>
+</body>
+</html>`;
+
+    compare(input, expected, {xmlMode: false});
+  });
+
+  it(`can handle a more complex HTML 5 document when not in xmlMode`, () => {
     var input = `<!doctype html>
 <html lang="en">
   <head>
@@ -213,21 +243,28 @@ Goodbye.
   </body>
 </html>`;
 
-    compare(input, expected, {xml: false});
+    compare(input, expected, {xmlMode: false});
   });
 
-  it(`can handle a self-closing tag`, () => {
+  it(`can preserve a self-closing tag when in xmlMode`, () => {
     var input = '<h1>Hello<br/>World!</h1>';
     var expected = '<h1>Hello<br/>World!</h1>';
 
-    compare(input, expected);
+    compare(input, expected, {xmlMode: true});
   });
 
-  it(`can self-close a void tag that is not closed`, () => {
+  it(`will FAIL to self-close a void tag that is not closed when in xmlMode`, () => {
     var input = '<h1>Hello<br>World!</h1>';
-    var expected = '<h1>Hello<br />World!</h1>';
+    var expected = '<h1>Hello<br>World!</br></h1>';
 
-    compare(input, expected);
+    compare(input, expected, {xmlMode: true});
+  });
+
+  it(`can handle self-closing or non-closed void tags when not in xmlMode`, () => {
+    var input = '<h1>Hello<br />World<br>!</h1>';
+    var expected = '<h1>Hello<br>World<br>!</h1>';
+
+    compare(input, expected, {xmlMode: false});
   });
 
 

@@ -9,7 +9,7 @@ const htmlEqual = require('assert-html-equal');
  * @param {object} cheerioOpts Options to pass to the cheerio library
  * @throws {Error} Throws an error if the output is not identical.
  */
-module.exports = function compare(input, expected, cheerioOpts ) {
+module.exports = function compare(input, expected, cheerioOpts) {
   const inky = new Inky();
   const output = inky.releaseTheKraken(input, cheerioOpts);
 
